@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number Guessing Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+        }
+        .game-container {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        input {
+            padding: 8px;
+            font-size: 16px;
+            width: 60px;
+            text-align: center;
+        }
+        button {
+            padding: 8px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 10px;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .score-display {
+            font-weight: bold;
+            font-size: 18px;
+            margin-top: 15px;
+        }
+        #feedback {
+            height: 24px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>Guess the Number</h1>
+        <p>Guess a number between 1 and 100</p>
+        
+        <div>
+            <input type="number" id="userGuess" min="1" max="100" placeholder="?">
+            <button id="checkButton">Check</button>
+            <button id="newGameButton">New Game</button>
+        </div>
+        
+        <p id="feedback"></p>
+        <p id="hints"></p>
+        
+        <div class="score-display">
+            <p>Score: <span id="score">10</span></p>
+        </div>
+    </div>
+
+    <script>
+        // Game variables
+        let secretNumber;
+        let gameActive = true;
+        
+        // DOM elements
+        const userGuessInput = document.getElementById("userGuess");
+        const checkButton = document.getElementById("checkButton");
+        const newGameButton = document.getElementById("newGameButton");
+        const feedbackElement = document.getElementById("feedback");
+        const hintsElement = document.getElementById("hints");
+        const scoreElement = document.getElementById("score");
+        
+        // Initialize game
+        function initGame() {
+            secretNumber = Math.floor(Math.random() * 100) + 1; // 1-100
+            gameActive = true;
+            feedbackElement.textContent = "";
+            hintsElement.textContent = "";
+            userGuessInput.value = "";
+            userGuessInput.focus();
+            console.log("Secret number:", secretNumber); // For debugging
+        }
+        
+        // Check guess
+        function checkGuess() {
+            if (!gameActive) return;
+            
+            const userGuess = parseInt(userGuessInput.value);
+            
+            // Validate input
+            if (isNaN(userGuess) || userGuess < 1 || userGuess > 100) {
+                feedbackElement.textContent = "Please enter a valid number between 1 and 100";
+                feedbackElement.style.color = "orange";
+                return;
+            }
+            
+            // Check guess
+            if (userGuess === secretNumber) {
+                feedbackElement.textContent = "Correct!";
+                feedbackElement.style.color = "green";
+                hintsElement.textContent = "You found the number!";
+                
+                // Update score
+                const currentScore = parseInt(scoreElement.textContent);
+                scoreElement.textContent = currentScore + 5;
+                
+                gameActive = false;
+                
+                // Show alert with slight delay
+                setTimeout(() => {
+                    alert(`Congratulations! You guessed the number ${secretNumber}. Your score is now ${scoreElement.textContent}.`);
+                }, 100);
+            } else {
+                // Provide hint
+                const hint = userGuess < secretNumber ? "higher" : "lower";
+                feedbackElement.textContent = "Not correct";
+                feedbackElement.style.color = "red";
+                hintsElement.textContent = `Try a ${hint} number`;
+                
+                // Decrease score
+                const currentScore = parseInt(scoreElement.textContent);
+                scoreElement.textContent = Math.max(0, currentScore - 1);
+                
+                // Focus input for next guess
+                userGuessInput.value = "";
+                userGuessInput.focus();
+            }
+        }
+        
+        // Event listeners
+        checkButton.addEventListener("click", checkGuess);
+        newGameButton.addEventListener("click", initGame);
+        
+        // Allow Enter key to submit guess
+        userGuessInput.addEventListener("keyup", function(event) {
+            if (event.key === "Enter") {
+                checkGuess();
+            }
+        });
+        
+        // Initialize game on page load
+        initGame();
+    </script>
+</body>
+</html>

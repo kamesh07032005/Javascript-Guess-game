@@ -38,4 +38,9 @@ This web application presents users with a fun number guessing challenge. The ga
 - Animations for correct guesses
 - Multiplayer option
 
+
+
+![image](https://github.com/user-attachments/assets/23128f01-8a53-4569-98bf-1831659e5a1d)
+
+
 Feel free to fork this repository and make your own improvements!
